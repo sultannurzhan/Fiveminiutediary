@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.term_project.R
+import com.example.term_project.MainActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -79,9 +80,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
-            // Proceed to main activity or wherever you want
-            Toast.makeText(this, "Welcome, ${user.displayName}", Toast.LENGTH_SHORT).show()
-            // Example: startActivity(Intent(this, MainActivity::class.java))
+            // Proceed to main activity
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
             finish()
         }
     }

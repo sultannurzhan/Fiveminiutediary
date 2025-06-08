@@ -36,6 +36,12 @@
                 android:value=".MainActivity" />
         </activity>
 
+        <activity
+            android:name="com.example.term_project.auth.LoginActivity"
+            android:exported="true"
+            android:label="Login"
+            android:theme="@style/Theme.Term_project" />
+
     </application>
 
 </manifest>
