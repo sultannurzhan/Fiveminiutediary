@@ -1,8 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-
-    id("com.google.gms.google-services")
 }
 
 android {
@@ -48,5 +46,19 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
+    // RecyclerView (LinearLayoutManager, GridLayoutManager 포함)
+    implementation(libs.androidx.recyclerview)
+
+    // CardView
+    implementation(libs.androidx.cardview)
+
+    // CoordinatorLayout (FloatingActionButton)
+    implementation(libs.androidx.coordinatorlayout)
+
+    // Fragment KTX
+    implementation(libs.androidx.fragment.ktx)
+
+    // ViewModel & LiveData
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
 }
