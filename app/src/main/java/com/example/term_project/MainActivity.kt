@@ -2,23 +2,40 @@ package com.example.term_project
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
+import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.navigation.NavigationView
 import java.util.*
 
-class MainActivity : AppCompatActivity(), MonthAdapter.OnMonthClickListener {
+class MainActivity : AppCompatActivity(), MonthAdapter.OnMonthClickListener, NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var yearTextView: TextView
     private lateinit var monthsRecyclerView: RecyclerView
     private lateinit var monthAdapter: MonthAdapter
     private var currentYear: Int = Calendar.getInstance().get(Calendar.YEAR)
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navigationView: NavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Check if user is authenticated
+        val user = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            // Not authenticated, go to LoginActivity
+            val intent = Intent(this, com.example.term_project.auth.LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+            return
+        }
         setContentView(R.layout.activity_main)
-
+        drawerLayout = findViewById(R.id.drawer_layout)
+        navigationView = findViewById(R.id.nav_view)
+        navigationView.setNavigationItemSelectedListener(this)
         initViews()
         setupRecyclerView()
         updateYearDisplay()
@@ -67,6 +84,21 @@ class MainActivity : AppCompatActivity(), MonthAdapter.OnMonthClickListener {
         currentYear = newYear
         updateYearDisplay()
         setupRecyclerView() // RecyclerView 갱신
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_logout -> {
+                com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
+                val intent = Intent(this, com.example.term_project.auth.LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+                return true
+            }
+        }
+        drawerLayout.closeDrawer(Gravity.LEFT)
+        return true
     }
 }
 
