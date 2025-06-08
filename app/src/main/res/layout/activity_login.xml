@@ -1,0 +1,35 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign in to Continue"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#222"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Your own styling or Google-branded button -->
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/btnGoogle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/tvInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="We use Google Sign-In for secure authentication."
+        android:textSize="14sp"
+        android:textColor="#666"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>
