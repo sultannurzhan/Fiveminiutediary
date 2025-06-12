@@ -53,13 +53,9 @@ class MainActivity : AppCompatActivity(), MonthAdapter.OnMonthClickListener, Nav
 
         // 월 데이터 생성 (1월부터 12월까지)
         val months = mutableListOf<Month>()
-        val monthNames = arrayOf(
-            "1", "2", "3", "4", "5", "6",
-            "7", "8", "9", "10", "11", "12"
-        )
 
         for (i in 1..12) {
-            months.add(Month(i, monthNames[i-1], currentYear))
+            months.add(Month(i, i.toString(), currentYear))
         }
 
         monthAdapter = MonthAdapter(months, this)
@@ -75,7 +71,6 @@ class MainActivity : AppCompatActivity(), MonthAdapter.OnMonthClickListener, Nav
         val intent = Intent(this, DiaryListActivity::class.java)
         intent.putExtra("YEAR", month.year)
         intent.putExtra("MONTH", month.number)
-        intent.putExtra("MONTH_NAME", month.name)
         startActivity(intent)
     }
 

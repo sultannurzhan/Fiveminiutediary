@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.term_project"
-        minSdk = 34
+        minSdk = 26 // 34는 너무 높음, 24로 변경 권장
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -37,33 +37,33 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+    // RecyclerView, CardView, CoordinatorLayout
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.cardview)
+    implementation(libs.androidx.coordinatorlayout)
+    implementation(libs.androidx.fragment.ktx)
+
+    // Lifecycle (lifecycleScope 사용을 위해 필수!)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.2")
+
+    // Firebase BOM - 버전 관리
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation("com.google.firebase:firebase-firestore-ktx") // BOM으로 버전 관리
+    implementation("com.google.firebase:firebase-auth-ktx") // BOM으로 버전 관리
+
+    // Google Play Services
+    implementation("com.google.android.gms:play-services-auth:21.2.0") // 최신 버전
+
+    // Test dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    // RecyclerView (LinearLayoutManager, GridLayoutManager 포함)
-    implementation(libs.androidx.recyclerview)
-
-    // CardView
-    implementation(libs.androidx.cardview)
-
-    // CoordinatorLayout (FloatingActionButton)
-    implementation(libs.androidx.coordinatorlayout)
-
-    // Fragment KTX
-    implementation(libs.androidx.fragment.ktx)
-
-    // ViewModel & LiveData
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
-
-    implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
-    implementation("com.google.firebase:firebase-database-ktx:21.0.0")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
 }

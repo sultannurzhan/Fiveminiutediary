@@ -10,8 +10,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class DiaryAdapter(
-    private val diaryEntries: List<DiaryEntry>,
-    private val listener: OnDiaryClickListener
+    private val diaryEntries: MutableList<DiaryEntry>,
+    private val listener: OnDiaryClickListener,
+
 ) : RecyclerView.Adapter<DiaryAdapter.DiaryViewHolder>() {
 
     interface OnDiaryClickListener {
@@ -35,7 +36,7 @@ class DiaryAdapter(
         val diary = diaryEntries[position]
 
         holder.titleText.text = diary.title
-        holder.contentPreview.text = getContentPreview(diary.content)
+        holder.contentPreview.text = getContentPreview(diary.body)
         holder.dateText.text = formatDate(diary.date)
 
         // 카드 클릭 리스너 설정
@@ -50,6 +51,12 @@ class DiaryAdapter(
 
     override fun getItemCount(): Int = diaryEntries.size
 
+    fun updateEntries(newEntries: List<DiaryEntry>) {
+        diaryEntries.clear()
+        diaryEntries.addAll(newEntries)
+        notifyDataSetChanged()
+    }
+
     private fun getContentPreview(content: String): String {
         return if (content.length > 50) {
             content.substring(0, 50) + "..."
@@ -57,6 +64,8 @@ class DiaryAdapter(
             content
         }
     }
+
+
 
     private fun formatDate(dateString: String): String {
         return try {

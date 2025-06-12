@@ -25,7 +25,7 @@
                 android:id="@+id/titleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2024년 1월 일기"
+                android:text=""
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textColor="#333333" />
