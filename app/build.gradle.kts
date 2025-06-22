@@ -41,6 +41,10 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    packaging {
+        resources.pickFirsts.add("**/libc++_shared.so")
+        resources.pickFirsts.add("**/libjsc.so")
+    }
 }
 
 dependencies {
@@ -78,6 +82,8 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
+    implementation ("org.pytorch:pytorch_android_lite:1.12.2")
+    implementation ("org.pytorch:pytorch_android_torchvision_lite:1.12.2")
     // Test dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

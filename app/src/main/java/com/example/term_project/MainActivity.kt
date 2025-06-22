@@ -19,7 +19,6 @@ import com.google.android.material.navigation.NavigationView
 import java.util.*
 
 class MainActivity : AppCompatActivity(), MonthAdapter.OnMonthClickListener, NavigationView.OnNavigationItemSelectedListener {
-
     private lateinit var yearTextView: TextView
     private lateinit var monthsRecyclerView: RecyclerView
     private lateinit var monthAdapter: MonthAdapter

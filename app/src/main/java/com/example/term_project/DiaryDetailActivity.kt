@@ -39,7 +39,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class DiaryDetailActivity : AppCompatActivity() {
-    
+
+    private lateinit var titleService: DiaryTitleService
     private lateinit var dateTextView: TextView
     private lateinit var titleEditText: EditText
     private lateinit var bodyEditText: EditText
@@ -72,6 +73,9 @@ class DiaryDetailActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val app = application as MyApplication
+        titleService = app.titleService
+
         setContentView(R.layout.activity_diary_detail)
         
         initViews()
@@ -213,7 +217,7 @@ class DiaryDetailActivity : AppCompatActivity() {
                 var titleGeneratedByAi = false
                 if (title.isEmpty()) {
                     Toast.makeText(this@DiaryDetailActivity, "AI is generating title...", Toast.LENGTH_SHORT).show()
-                    title = aiService.generateTitle(body)
+                    title = titleService.generateTitle(body)
                     titleEditText.setText(title)
                     titleGeneratedByAi = true
                 }
