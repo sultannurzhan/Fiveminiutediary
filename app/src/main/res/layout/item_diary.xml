@@ -64,16 +64,6 @@
                 android:textStyle="normal" />
 
             <!-- Menu button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/deleteButton"
-                style="@style/Widget.Material3.Button.IconButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="8dp"
-                app:icon="@android:drawable/ic_menu_delete"
-                app:iconSize="16dp"
-                app:iconTint="@color/text_secondary"
-                android:backgroundTint="@android:color/transparent" />
 
         </LinearLayout>
 

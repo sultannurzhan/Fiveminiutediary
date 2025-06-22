@@ -18,32 +18,6 @@ class AiService {
 
     private val apiService = retrofit.create(UpstageApiService::class.java)
 
-    suspend fun generateTitle(diaryContent: String): String = withContext(Dispatchers.IO) {
-        try {
-            val messages = listOf(
-                Message("system", "일기 내용을 바탕으로 적절한 제목을 생성해주세요. 10자 이내로 간단명료하게."),
-                Message("user", diaryContent)
-            )
-
-            val request = CompletionRequest(
-                model = "solar-1-mini-chat",
-                messages = messages,
-                max_tokens = 50,
-                temperature = 0.7
-            )
-
-            val response = apiService.generateCompletion("Bearer $apiKey", request)
-            if (response.isSuccessful) {
-                response.body()?.choices?.firstOrNull()?.message?.content?.trim()
-                    ?: "새로운 일기"
-            } else {
-                "새로운 일기"
-            }
-        } catch (e: Exception) {
-            "새로운 일기"
-        }
-    }
-
     suspend fun getAiSuggestion(diaryContent: String, customPrompt: String? = null): String =
         withContext(Dispatchers.IO) {
             return@withContext try {

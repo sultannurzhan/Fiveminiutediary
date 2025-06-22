@@ -1,6 +1,8 @@
 package com.example.term_project
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -11,6 +13,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,7 +33,7 @@ class MainActivity : AppCompatActivity(), MonthAdapter.OnMonthClickListener, Nav
     private lateinit var prevYearButton: MaterialButton
     private lateinit var nextYearButton: MaterialButton
     private lateinit var drawerToggle: ActionBarDrawerToggle
-
+    private val CALENDAR_PERMISSION_REQUEST_CODE = 100
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Check if user is authenticated
@@ -46,9 +50,9 @@ class MainActivity : AppCompatActivity(), MonthAdapter.OnMonthClickListener, Nav
         navigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
         
-        // Setup drawer toggle
+
         setupDrawerToggle()
-        
+        requestCalendarPermission()
         initViews()
         setupRecyclerView()
         updateYearDisplay()
@@ -86,6 +90,37 @@ class MainActivity : AppCompatActivity(), MonthAdapter.OnMonthClickListener, Nav
         drawerToggle.syncState()
         
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun requestCalendarPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALENDAR)
+            != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.READ_CALENDAR),
+                CALENDAR_PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            CALENDAR_PERMISSION_REQUEST_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // 권한이 허용됨 - RecyclerView 새로고침
+                    // adapter.notifyDataSetChanged()
+                } else {
+                    Toast.makeText(this, "캘린더 권한이 필요합니다", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun setupYearNavigation() {

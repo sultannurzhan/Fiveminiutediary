@@ -1,5 +1,6 @@
 package com.example.term_project
 
+
 import android.Manifest
 import android.app.Activity
 import android.content.Context
@@ -326,7 +327,7 @@ class DiaryDetailActivity : AppCompatActivity() {
                 generateTitleButton.isEnabled = false
                 generateTitleButton.text = "..."
                 
-                val generatedTitle = aiService.generateTitle(body)
+                val generatedTitle = titleService.generateTitle(body)
                 titleEditText.setText(generatedTitle)
                 
                 Toast.makeText(this@DiaryDetailActivity, "AI generated a title!", Toast.LENGTH_SHORT).show()
