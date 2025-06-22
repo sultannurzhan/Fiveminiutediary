@@ -27,6 +27,13 @@ class T5TitleGenerator(private val context: Context) {
 
     suspend fun initializeModel() = withContext(Dispatchers.IO) {
         try {
+            // Check if model file exists in assets first
+            val assetManager = context.assets
+            val assetFiles = assetManager.list("") ?: emptyArray()
+            if (!assetFiles.contains("my_quantized_t5_mobile.ptl")) {
+                throw RuntimeException("Model file 'my_quantized_t5_mobile.ptl' not found in assets")
+            }
+            
             // 모델 로드
             val modelFile = getAssetFile("my_quantized_t5_mobile.ptl")
             model = LiteModuleLoader.load(modelFile.getAbsolutePath())
@@ -38,7 +45,8 @@ class T5TitleGenerator(private val context: Context) {
 
         } catch (e: Exception) {
             e.printStackTrace()
-            throw RuntimeException("모델 초기화 실패: ${e.message}")
+            // Don't throw exception, just log it - app should continue to work without AI features
+            println("Failed to initialize AI model: ${e.message}")
         }
     }
 
@@ -266,16 +274,30 @@ class T5TitleGenerator(private val context: Context) {
 class DiaryTitleService(private val context: Context) {
     private val titleGenerator = T5TitleGenerator(context)
     private var isInitialized = false
+    private var initializationFailed = false
 
     suspend fun initializeIfNeeded() {
-        if (!isInitialized) {
-            titleGenerator.initializeModel()
-            isInitialized = true
+        if (!isInitialized && !initializationFailed) {
+            try {
+                titleGenerator.initializeModel()
+                isInitialized = true
+            } catch (e: Exception) {
+                initializationFailed = true
+                println("Title service initialization failed: ${e.message}")
+            }
         }
     }
 
     suspend fun generateTitle(diaryContent: String): String {
         initializeIfNeeded()
-        return titleGenerator.generateTitle(diaryContent)
+        return if (isInitialized) {
+            try {
+                titleGenerator.generateTitle(diaryContent)
+            } catch (e: Exception) {
+                "새로운 일기" // Fallback title
+            }
+        } else {
+            "새로운 일기" // Fallback title when model is not available
+        }
     }
 }

@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -52,6 +53,17 @@ class MainActivity : AppCompatActivity(), MonthAdapter.OnMonthClickListener, Nav
         setupRecyclerView()
         updateYearDisplay()
         setupYearNavigation()
+        
+        // Setup modern back button handling
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
+                    drawerLayout.closeDrawer(Gravity.LEFT)
+                } else {
+                    finish()
+                }
+            }
+        })
     }
 
     private fun initViews() {
@@ -183,14 +195,6 @@ class MainActivity : AppCompatActivity(), MonthAdapter.OnMonthClickListener, Nav
         } catch (e: Exception) {
             Log.e("MainActivity", "Error during logout: ${e.message}", e)
             Toast.makeText(this, "Error during logout", Toast.LENGTH_SHORT).show()
-        }
-    }
-    
-    override fun onBackPressed() {
-        if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
-            drawerLayout.closeDrawer(Gravity.LEFT)
-        } else {
-            super.onBackPressed()
         }
     }
 }
