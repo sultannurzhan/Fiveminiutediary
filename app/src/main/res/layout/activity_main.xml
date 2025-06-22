@@ -83,9 +83,13 @@
                             android:textStyle="bold"
                             android:textColor="@color/text_white"
                             android:background="@drawable/year_background"
-                            android:padding="12dp"
+                            android:padding="16dp"
+                            android:paddingTop="12dp"
+                            android:paddingBottom="12dp"
                             android:minWidth="120dp"
-                            android:gravity="center" />
+                            android:minHeight="48dp"
+                            android:gravity="center"
+                            android:includeFontPadding="false" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/nextYearButton"

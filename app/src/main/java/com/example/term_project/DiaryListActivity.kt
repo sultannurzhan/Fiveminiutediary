@@ -55,6 +55,12 @@ class DiaryListActivity : AppCompatActivity(), DiaryAdapter.OnDiaryClickListener
             }
         }
 
+        override fun onResume() {
+            super.onResume()
+            // Refresh diary entries when returning to this activity
+            loadDiaryEntries()
+        }
+
         private fun getIntentData() {
             year = intent.getIntExtra("YEAR", 2024)
             month = intent.getIntExtra("MONTH", 1)
@@ -70,7 +76,23 @@ class DiaryListActivity : AppCompatActivity(), DiaryAdapter.OnDiaryClickListener
         }
 
         private fun setupTitle() {
-            titleTextView.text = "${year}/ ${month} diaries"
+            // Convert month number to month name
+            val monthNames = arrayOf(
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            )
+            val monthName = if (month in 1..12) monthNames[month - 1] else "Unknown"
+            titleTextView.text = "$monthName $year"
+        }
+        
+        private fun updateTitleWithCount(count: Int) {
+            val monthNames = arrayOf(
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            )
+            val monthName = if (month in 1..12) monthNames[month - 1] else "Unknown"
+            val diaryText = if (count == 1) "diary" else "diaries"
+            titleTextView.text = "$monthName $year - $count $diaryText"
         }
 
         private fun setupRecyclerView() {
@@ -84,8 +106,11 @@ class DiaryListActivity : AppCompatActivity(), DiaryAdapter.OnDiaryClickListener
                 try {
                     val diaryEntries = getDiaryEntriesForMonth(year, month)
                     diaryAdapter.updateEntries(diaryEntries) // 어댑터 업데이트
+                    // Update title with actual diary count
+                    updateTitleWithCount(diaryEntries.size)
                 } catch (e: Exception) {
                     // Error handling could be added here if needed
+                    updateTitleWithCount(0)
                 }
             }
         }
@@ -184,11 +209,5 @@ class DiaryListActivity : AppCompatActivity(), DiaryAdapter.OnDiaryClickListener
         override fun onSupportNavigateUp(): Boolean {
             finish()
             return true
-        }
-
-        override fun onResume() {
-            super.onResume()
-            // Refresh the diary list when returning from DiaryDetailActivity
-            loadDiaryEntries()
         }
 }

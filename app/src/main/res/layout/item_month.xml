@@ -1,107 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/monthCard"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
+    android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:clickable="true"
     android:focusable="true"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="8dp"
-    app:cardBackgroundColor="@color/surface_primary"
-    app:strokeWidth="0dp"
-    android:animateLayoutChanges="true">
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp"
+    app:rippleColor="@android:color/white">
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="200dp"
+        android:background="@drawable/gradient_spring"
+        android:padding="16dp">
 
-        <!-- Gradient overlay -->
-        <View
-            android:id="@+id/gradientOverlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/card_gradient_modern"
-            android:alpha="0.1" />
+        <!-- Month Name -->
+        <TextView
+            android:id="@+id/monthNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Jan"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-        <!-- Seasonal background pattern -->
-        <View
-            android:id="@+id/seasonalPattern"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="top|end"
-            android:layout_margin="16dp"
-            android:alpha="0.3" />
-
-        <!-- Content -->
+        <!-- Week Days Header -->
         <LinearLayout
+            android:id="@+id/weekDaysHeader"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_height="wrap_content"
+            android:layout_below="@id/monthNameText"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
 
-            <!-- Month name (primary) -->
             <TextView
-                android:id="@+id/monthText"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Jan"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:layout_marginBottom="4dp" />
+                android:text="S"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:alpha="0.8" />
 
-            <!-- Month number (secondary) -->
             <TextView
-                android:id="@+id/monthNumber"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="01"
-                android:textSize="14sp"
-                android:textStyle="normal"
-                android:textColor="@color/text_secondary"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:letterSpacing="0.02" />
+                android:text="M"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:alpha="0.8" />
 
-            <!-- Entry count indicator (optional) -->
-            <LinearLayout
-                android:id="@+id/entryIndicator"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="8dp"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:visibility="gone">
+                android:text="T"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:alpha="0.8" />
 
-                <View
-                    android:layout_width="6dp"
-                    android:layout_height="6dp"
-                    android:background="@drawable/indicator_dot"
-                    android:layout_marginEnd="4dp" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="W"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:alpha="0.8" />
 
-                <TextView
-                    android:id="@+id/entryCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="3 entries"
-                    android:textSize="12sp"
-                    android:textColor="@color/text_accent" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="T"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:alpha="0.8" />
 
-            </LinearLayout>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="F"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:alpha="0.8" />
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="S"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:alpha="0.8" />
         </LinearLayout>
 
-        <!-- Ripple effect overlay -->
-        <View
+        <!-- Mini Calendar Grid -->
+        <GridLayout
+            android:id="@+id/miniCalendarGrid"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="false"
-            android:focusable="false" />
+            android:layout_height="120dp"
+            android:layout_below="@id/weekDaysHeader"
+            android:layout_marginTop="4dp"
+            android:columnCount="7"
+            android:rowCount="6"
+            android:alignmentMode="alignBounds"
+            android:columnOrderPreserved="false"
+            android:useDefaultMargins="false" />
 
-    </FrameLayout>
+        <!-- Entry Count Indicator -->
+        <View
+            android:id="@+id/entryIndicator"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/indicator_dot"
+            android:visibility="gone" />
 
+    </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>
