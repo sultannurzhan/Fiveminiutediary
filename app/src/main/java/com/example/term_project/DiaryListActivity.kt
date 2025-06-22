@@ -1,8 +1,9 @@
 package com.example.term_project
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +13,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -73,35 +75,30 @@ class DiaryListActivity : AppCompatActivity(), DiaryAdapter.OnDiaryClickListener
                     val diaryEntries = getDiaryEntriesForMonth(year, month)
                     diaryAdapter.updateEntries(diaryEntries) // 어댑터 업데이트
                 } catch (e: Exception) {
-                    Log.e("DiaryList", "Error loading diary entries", e)
+                    // Error handling could be added here if needed
                 }
             }
         }
 
         private fun setupFab() {
             fabAddDiary.setOnClickListener {
-                // 새 다이어리 작성 액티비티로 이동
-                // val intent = Intent(this, WriteDiaryActivity::class.java)
-                // intent.putExtra("YEAR", year)
-                // intent.putExtra("MONTH", month)
-                // startActivity(intent)
-
-                // 임시로 토스트 메시지 표시
-                android.widget.Toast.makeText(this, "새 일기 작성", android.widget.Toast.LENGTH_SHORT).show()
+                // Navigate to DiaryDetailActivity for creating new diary
+                val intent = android.content.Intent(this, DiaryDetailActivity::class.java)
+                intent.putExtra("YEAR", year)
+                intent.putExtra("MONTH", month)
+                startActivity(intent)
             }
         }
+        
         private suspend fun getDiaryEntriesForMonth(year: Int, month: Int): List<DiaryEntry> = suspendCoroutine { continuation ->
             val currentUserId = auth.currentUser?.uid
 
-            // 해당 월의 시작과 끝 날짜 계산
-            val startOfMonth = getStartOfMonth(year, month)
-            val startOfNextMonth = getStartOfMonth(year, month + 1)
+            // Create month string in format "YYYY-MM"
+            val monthString = String.format("%04d-%02d", year, month)
 
-            db.collection("Notes")
+            db.collection("NOTE")
                 .whereEqualTo("user", currentUserId)
-                .whereGreaterThanOrEqualTo("created_at", startOfMonth)
-                .whereLessThan("created_at", startOfNextMonth)
-                .orderBy("created_at", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .whereEqualTo("month", monthString)
                 .get()
                 .addOnSuccessListener { documents ->
                     val diaryList = documents.mapNotNull { document ->
@@ -110,10 +107,9 @@ class DiaryListActivity : AppCompatActivity(), DiaryAdapter.OnDiaryClickListener
                             diary.id = document.id
                             diary
                         } catch (e: Exception) {
-                            Log.e("Firestore", "Error converting document: ${document.id}", e)
                             null
                         }
-                    }
+                    }.sortedByDescending { it.created_at?.toDate() } // Sort in memory instead
                     continuation.resume(diaryList)
                 }
                 .addOnFailureListener { exception ->
@@ -121,44 +117,69 @@ class DiaryListActivity : AppCompatActivity(), DiaryAdapter.OnDiaryClickListener
                 }
         }
 
-    // 월의 시작 날짜 계산 함수
-        private fun getStartOfMonth(year: Int, month: Int): Timestamp {
-            val calendar = Calendar.getInstance().apply {
-                set(Calendar.YEAR, year)
-                set(Calendar.MONTH, month - 1) // Calendar.MONTH는 0부터 시작
-                set(Calendar.DAY_OF_MONTH, 1)
-                set(Calendar.HOUR_OF_DAY, 0)
-                set(Calendar.MINUTE, 0)
-                set(Calendar.SECOND, 0)
-                set(Calendar.MILLISECOND, 0)
-            }
-            return Timestamp(calendar.time)
-        }
-
-
         override fun onDiaryClick(diary: DiaryEntry) {
-            // 다이어리 상세보기 또는 편집 액티비티로 이동
-            android.widget.Toast.makeText(this, "${diary.title} 클릭됨", android.widget.Toast.LENGTH_SHORT).show()
+            // Navigate to DiaryDetailActivity for viewing/editing
+            val intent = android.content.Intent(this, DiaryDetailActivity::class.java)
+            intent.putExtra("DIARY_ID", diary.id)
+            intent.putExtra("DIARY_TITLE", diary.title)
+            intent.putExtra("DIARY_BODY", diary.body)
+            intent.putExtra("LLM_USED", diary.llm_used)
+            intent.putExtra("YEAR", year)
+            intent.putExtra("MONTH", month)
+            intent.putStringArrayListExtra("DIARY_IMAGES", ArrayList(diary.images))
+            startActivity(intent)
+        }
+        
+        override fun onDiaryLongClick(diary: DiaryEntry) {
+            // Show delete confirmation dialog on long click
+            showDeleteConfirmationDialog(diary)
+        }
+        
+        private fun showDeleteConfirmationDialog(diary: DiaryEntry) {
+            AlertDialog.Builder(this)
+                .setTitle("일기 삭제")
+                .setMessage("'${diary.title}' 일기를 삭제하시겠습니까? 삭제된 일기는 복구할 수 없습니다.")
+                .setPositiveButton("삭제") { _, _ ->
+                    deleteDiary(diary)
+                }
+                .setNegativeButton("취소", null)
+                .show()
+        }
+        
+        private fun deleteDiary(diary: DiaryEntry) {
+            lifecycleScope.launch {
+                try {
+                    val currentUser = auth.currentUser
+                    if (currentUser == null) {
+                        Toast.makeText(this@DiaryListActivity, "Login required", Toast.LENGTH_SHORT).show()
+                        return@launch
+                    }
+                    
+                    // Delete the diary from Firestore
+                    db.collection("NOTE")
+                        .document(diary.id)
+                        .delete()
+                        .await()
+                    
+                    Toast.makeText(this@DiaryListActivity, "Diary deleted successfully", Toast.LENGTH_SHORT).show()
+                    
+                    // Refresh the diary list
+                    loadDiaryEntries()
+                    
+                } catch (e: Exception) {
+                    Toast.makeText(this@DiaryListActivity, "Error deleting diary: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
         }
 
         override fun onSupportNavigateUp(): Boolean {
             finish()
             return true
         }
-}
 
-// 다이어리 엔트리 데이터 클래스
-data class DiaryEntry(
-    var id: String = "",
-    val title: String = "",
-    val body: String = "",
-    val llm_used: Boolean,
-    val user: String = "",
-    val created_at: Timestamp? = null
-) {
-    val date: String
-        get() = created_at?.let { timestamp ->
-            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            sdf.format(timestamp.toDate())
-        } ?: ""
+        override fun onResume() {
+            super.onResume()
+            // Refresh the diary list when returning from DiaryDetailActivity
+            loadDiaryEntries()
+        }
 }

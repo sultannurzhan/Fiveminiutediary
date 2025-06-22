@@ -62,6 +62,10 @@ dependencies {
     // Google Play Services
     implementation("com.google.android.gms:play-services-auth:21.2.0") // 최신 버전
 
+    // Glide for image loading
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
     // Test dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

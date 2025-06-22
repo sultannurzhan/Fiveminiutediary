@@ -2,4 +2,14 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <!-- Modern color palette -->
+    <color name="background_light">#F8F9FA</color>
+    <color name="text_primary">#2C3E50</color>
+    <color name="text_secondary">#95A5A6</color>
+    <color name="accent_blue">#3498DB</color>
+    <color name="accent_purple">#8E44AD</color>
+    <color name="accent_green">#27AE60</color>
+    <color name="accent_red">#E74C3C</color>
+    <color name="accent_gray">#6C757D</color>
 </resources>

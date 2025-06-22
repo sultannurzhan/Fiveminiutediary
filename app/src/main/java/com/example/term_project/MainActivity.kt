@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.term_project.auth.LoginActivity
 import com.google.android.material.navigation.NavigationView
 import java.util.*
 
@@ -27,7 +28,7 @@ class MainActivity : AppCompatActivity(), MonthAdapter.OnMonthClickListener, Nav
         val user = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
         if (user == null) {
             // Not authenticated, go to LoginActivity
-            val intent = Intent(this, com.example.term_project.auth.LoginActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
             return
