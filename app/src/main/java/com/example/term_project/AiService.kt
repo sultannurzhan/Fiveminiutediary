@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 import android.util.Log
 
 class AiService {
-    private val apiKey = "up_qAkQkXsBjCAByXlZzYBd1f0H4ug20"
+    private val apiKey = BuildConfig.UPSTAGE_API_KEY
     private val baseUrl = "https://api.upstage.ai/"
 
     private val retrofit = Retrofit.Builder()

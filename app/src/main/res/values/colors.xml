@@ -3,13 +3,40 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     
-    <!-- Modern color palette -->
+    <!-- Modern gradient color palette -->
+    <color name="primary_gradient_start">#667eea</color>
+    <color name="primary_gradient_end">#764ba2</color>
+    <color name="secondary_gradient_start">#f093fb</color>
+    <color name="secondary_gradient_end">#f5576c</color>
+    
+    <!-- Surface colors -->
+    <color name="surface_primary">#FFFFFF</color>
+    <color name="surface_secondary">#F8F9FA</color>
+    <color name="surface_accent">#E8F0FE</color>
+    
+    <!-- Text colors -->
+    <color name="text_primary">#1A1A1A</color>
+    <color name="text_secondary">#6B7280</color>
+    <color name="text_accent">#667eea</color>
+    <color name="text_white">#FFFFFF</color>
+    
+    <!-- Status colors -->
+    <color name="success">#10B981</color>
+    <color name="warning">#F59E0B</color>
+    <color name="error">#EF4444</color>
+    <color name="info">#3B82F6</color>
+    
+    <!-- Legacy colors for compatibility -->
     <color name="background_light">#F8F9FA</color>
-    <color name="text_primary">#2C3E50</color>
-    <color name="text_secondary">#95A5A6</color>
-    <color name="accent_blue">#3498DB</color>
-    <color name="accent_purple">#8E44AD</color>
-    <color name="accent_green">#27AE60</color>
-    <color name="accent_red">#E74C3C</color>
-    <color name="accent_gray">#6C757D</color>
+    <color name="accent_blue">#667eea</color>
+    <color name="accent_purple">#764ba2</color>
+    <color name="accent_green">#10B981</color>
+    <color name="accent_red">#EF4444</color>
+    <color name="accent_gray">#6B7280</color>
+    
+    <!-- Month card colors -->
+    <color name="month_spring">#FF8A80</color>
+    <color name="month_summer">#FFD54F</color>
+    <color name="month_autumn">#FFAB40</color>
+    <color name="month_winter">#81C784</color>
 </resources>

@@ -1,99 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/diaryCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="8dp"
+    android:layout_marginHorizontal="4dp"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
-    app:cardBackgroundColor="#FFFFFF">
+    app:cardCornerRadius="16dp"
+    app:cardElevation="6dp"
+    app:cardBackgroundColor="@color/surface_primary"
+    app:strokeWidth="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
-        <!-- 제목과 날짜 -->
+        <!-- Header with date and status -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <!-- Date chip -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/date_chip_background"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:layout_marginEnd="12dp">
+
+                <TextView
+                    android:id="@+id/dateText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="22"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/text_accent" />
+
+            </LinearLayout>
+
+            <!-- Entry indicator -->
+            <View
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/indicator_dot"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Today's Memory"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:textStyle="normal" />
+
+            <!-- Menu button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/deleteButton"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="8dp"
+                app:icon="@android:drawable/ic_menu_delete"
+                app:iconSize="16dp"
+                app:iconTint="@color/text_secondary"
+                android:backgroundTint="@android:color/transparent" />
+
+        </LinearLayout>
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="A Beautiful Day"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:lineSpacingMultiplier="1.2"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Content preview -->
+        <TextView
+            android:id="@+id/contentPreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Today was an amazing day filled with wonderful experiences..."
+            android:textSize="14sp"
+            android:textColor="@color/text_secondary"
+            android:lineSpacingMultiplier="1.4"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Footer with entry stats -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
+            <!-- AI badge (if AI enhanced) -->
             <TextView
-                android:id="@+id/titleText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text=""
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#333333"
-                android:maxLines="1"
-                android:ellipsize="end" />
-
-            <TextView
-                android:id="@+id/dateText"
+                android:id="@+id/aiBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="12sp"
-                android:textColor="#666666"
-                android:background="#F0F0F0"
+                android:text="AI Enhanced"
+                android:textSize="10sp"
+                android:textColor="@color/text_white"
+                android:background="@drawable/ai_badge_background"
                 android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp"
-                android:layout_marginStart="8dp" />
+                android:paddingVertical="3dp"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone" />
 
-        </LinearLayout>
-
-        <!-- 내용 미리보기 -->
-        <TextView
-            android:id="@+id/contentPreview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text=""
-            android:textSize="14sp"
-            android:textColor="#666666"
-            android:lineSpacingExtra="2dp"
-            android:maxLines="2"
-            android:ellipsize="end" />
-
-        <!-- 구분선 (선택사항) -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="12dp"
-            android:background="#E0E0E0" />
-
-        <!-- 액션 버튼들 (선택사항) -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="end"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/deleteButton"
+            <!-- Image count -->
+            <LinearLayout
+                android:id="@+id/imageCountLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="삭제"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginEnd="12dp"
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:background="@drawable/image_icon_background"
+                    android:layout_marginEnd="4dp" />
+
+                <TextView
+                    android:id="@+id/imageCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3"
+                    android:textSize="11sp"
+                    android:textColor="@color/text_secondary" />
+
+            </LinearLayout>
+
+            <!-- Spacer -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <!-- Read more indicator -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Read more →"
                 android:textSize="12sp"
-                android:textColor="#F44336"
-                android:padding="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true" />
+                android:textColor="@color/text_accent"
+                android:textStyle="normal" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+    <!-- Ripple effect overlay -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="false"
+        android:focusable="false" />
+
+</com.google.android.material.card.MaterialCardView>

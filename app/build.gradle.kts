@@ -8,6 +8,10 @@ android {
     namespace = "com.example.term_project"
     compileSdk = 35
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.example.term_project"
         minSdk = 26 // 34는 너무 높음, 24로 변경 권장
@@ -16,6 +20,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Add API key to BuildConfig for security
+        buildConfigField("String", "UPSTAGE_API_KEY", "\"up_qAkQkXsBjCAByXlZzYBd1f0H4ug20\"")
     }
 
     buildTypes {

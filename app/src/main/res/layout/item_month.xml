@@ -1,34 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/monthCard"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="140dp"
     android:layout_margin="8dp"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="4dp"
-    app:cardBackgroundColor="#FFFFFF">
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp"
+    app:cardBackgroundColor="@color/surface_primary"
+    app:strokeWidth="0dp"
+    android:animateLayoutChanges="true">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/monthText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:gravity="center" />
+        <!-- Gradient overlay -->
+        <View
+            android:id="@+id/gradientOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/card_gradient_modern"
+            android:alpha="0.1" />
 
-    </LinearLayout>
+        <!-- Seasonal background pattern -->
+        <View
+            android:id="@+id/seasonalPattern"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="16dp"
+            android:alpha="0.3" />
 
-</androidx.cardview.widget.CardView>
+        <!-- Content -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Month name (primary) -->
+            <TextView
+                android:id="@+id/monthText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jan"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:gravity="center"
+                android:layout_marginBottom="4dp" />
+
+            <!-- Month number (secondary) -->
+            <TextView
+                android:id="@+id/monthNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="01"
+                android:textSize="14sp"
+                android:textStyle="normal"
+                android:textColor="@color/text_secondary"
+                android:gravity="center"
+                android:letterSpacing="0.02" />
+
+            <!-- Entry count indicator (optional) -->
+            <LinearLayout
+                android:id="@+id/entryIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:background="@drawable/indicator_dot"
+                    android:layout_marginEnd="4dp" />
+
+                <TextView
+                    android:id="@+id/entryCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3 entries"
+                    android:textSize="12sp"
+                    android:textColor="@color/text_accent" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Ripple effect overlay -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="false"
+            android:focusable="false" />
+
+    </FrameLayout>
+
+</com.google.android.material.card.MaterialCardView>

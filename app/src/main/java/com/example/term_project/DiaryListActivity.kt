@@ -1,6 +1,7 @@
 package com.example.term_project
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -8,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -25,7 +26,7 @@ class DiaryListActivity : AppCompatActivity(), DiaryAdapter.OnDiaryClickListener
 
         private lateinit var titleTextView: TextView
         private lateinit var diaryRecyclerView: RecyclerView
-        private lateinit var fabAddDiary: FloatingActionButton
+        private lateinit var fabAddDiary: ExtendedFloatingActionButton
         private lateinit var diaryAdapter: DiaryAdapter
         private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
         private val auth = FirebaseAuth.getInstance()
@@ -34,15 +35,24 @@ class DiaryListActivity : AppCompatActivity(), DiaryAdapter.OnDiaryClickListener
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_diary_list)
+            
+            try {
+                Log.d("DiaryListActivity", "Starting onCreate")
+                setContentView(R.layout.activity_diary_list)
 
-            getIntentData()
-            initViews()
-            setupRecyclerView()
-            setupTitle()
-            setupFab()
+                getIntentData()
+                initViews()
+                setupRecyclerView()
+                setupTitle()
+                setupFab()
 
-            loadDiaryEntries()
+                loadDiaryEntries()
+                Log.d("DiaryListActivity", "onCreate completed successfully")
+            } catch (e: Exception) {
+                Log.e("DiaryListActivity", "Error in onCreate: ${e.message}", e)
+                Toast.makeText(this, "Error loading diary list: ${e.message}", Toast.LENGTH_LONG).show()
+                finish()
+            }
         }
 
         private fun getIntentData() {
