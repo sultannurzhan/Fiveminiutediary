@@ -1,156 +1,126 @@
 package com.example.term_project
-
-import android.util.Log
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.Response
+import retrofit2.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
-import org.json.JSONObject
-import java.io.OutputStreamWriter
-import java.net.HttpURLConnection
-import java.net.URL
+import android.util.Log
 
 class AiService {
-    private val apiKey = ""
-    private val baseUrl = "https://api.groq.com/openai/v1/chat/completions"
-    
+    private val apiKey = "up_qAkQkXsBjCAByXlZzYBd1f0H4ug20"
+    private val baseUrl = "https://api.upstage.ai/"
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    private val apiService = retrofit.create(UpstageApiService::class.java)
+
     suspend fun generateTitle(diaryContent: String): String = withContext(Dispatchers.IO) {
         try {
-            val prompt = """
-                Based on the following diary content, generate an appropriate title in English. 
-                The title should be concise, emotional, and within 10 words.
-                Respond ONLY in English language, regardless of the input language.
-                
-                Diary content:
-                $diaryContent
-                
-                Please respond with only the title in English.
-            """.trimIndent()
-            
-            return@withContext callGroqApi(prompt)
-        } catch (e: Exception) {
-            return@withContext "Today's Diary"
-        }
-    }
-    
-    suspend fun getAiSuggestion(diaryContent: String, customPrompt: String? = null): String = withContext(Dispatchers.IO) {
-        try {
-            val prompt = if (customPrompt.isNullOrBlank()) {
-                """
-                This is a diary entry written by a user. Please read it and provide advice in English including:
-                
-                1. Emotional empathy and comfort
-                2. Positive perspective
-                3. Practical advice or solutions
-                4. Encouraging message
-                
-                Diary content:
-                $diaryContent
-                
-                Please respond ONLY in English language with a warm and friendly tone. Keep it around 150-200 words.
-                Do not use any other language except English in your response.
-                """.trimIndent()
+            val messages = listOf(
+                Message("system", "일기 내용을 바탕으로 적절한 제목을 생성해주세요. 10자 이내로 간단명료하게."),
+                Message("user", diaryContent)
+            )
+
+            val request = CompletionRequest(
+                model = "solar-1-mini-chat",
+                messages = messages,
+                max_tokens = 50,
+                temperature = 0.7
+            )
+
+            val response = apiService.generateCompletion("Bearer $apiKey", request)
+            if (response.isSuccessful) {
+                response.body()?.choices?.firstOrNull()?.message?.content?.trim()
+                    ?: "새로운 일기"
             } else {
-                """
-                Here is a diary entry written by a user:
-                $diaryContent
-                
-                User's question: $customPrompt
-                
-                Based on the diary content above, please answer the user's question in English with a warm and friendly tone.
-                Respond ONLY in English language, regardless of the input language.
-                """.trimIndent()
+                "새로운 일기"
             }
-            
-            return@withContext callGroqApi(prompt)
         } catch (e: Exception) {
-            return@withContext "Sorry, there was a temporary issue with the AI service. Please try again later. Error: ${e.message}"
-        }
-    }
-    
-    suspend fun extendDiary(diaryContent: String): String = withContext(Dispatchers.IO) {
-        try {
-            val prompt = """
-                Please read this diary entry and extend it naturally. Add more thoughts, emotions, details, or reflections that would make the diary more complete and engaging. The extension should feel like a natural continuation of the original content.
-                
-                Guidelines:
-                - Keep the same tone and writing style
-                - Add meaningful details or emotions
-                - Make it feel like the same person writing
-                - Don't repeat the existing content
-                - Respond ONLY in English language
-                - Keep the extension around 100-150 words
-                
-                Original diary content:
-                $diaryContent
-                
-                Please provide only the extension part that can be added to the original diary.
-            """.trimIndent()
-            
-            return@withContext callGroqApi(prompt)
-        } catch (e: Exception) {
-            return@withContext "Sorry, there was an error extending your diary. Please try again later."
+            "새로운 일기"
         }
     }
 
-    private fun callGroqApi(prompt: String): String {
-        val url = URL(baseUrl)
-        val connection = url.openConnection() as HttpURLConnection
-        
-        connection.requestMethod = "POST"
-        connection.setRequestProperty("Content-Type", "application/json")
-        connection.setRequestProperty("Authorization", "Bearer $apiKey")
-        connection.doOutput = true
-        connection.connectTimeout = 30000 // 30 seconds
-        connection.readTimeout = 30000 // 30 seconds
-        
-        val requestBody = JSONObject().apply {
-            put("model", "llama-3.3-70b-versatile")
-            put("messages", JSONArray().apply {
-                put(JSONObject().apply {
-                    put("role", "system")
-                    put("content", "You are a helpful and empathetic AI assistant. Always respond in English only, regardless of the language of the input. Provide warm, friendly, and supportive advice.")
-                })
-                put(JSONObject().apply {
-                    put("role", "user")
-                    put("content", prompt)
-                })
-            })
-            put("max_tokens", 1000)
-            put("temperature", 0.7)
-        }
-        
-        try {
-            OutputStreamWriter(connection.outputStream).use { writer ->
-                writer.write(requestBody.toString())
-                writer.flush()
-            }
-            
-            val responseCode = connection.responseCode
-            Log.d("AiService", "API Response Code: $responseCode")
-            
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                val response = connection.inputStream.bufferedReader().use { it.readText() }
-                Log.d("AiService", "API Response: $response")
-                val jsonResponse = JSONObject(response)
-                return jsonResponse.getJSONArray("choices")
-                    .getJSONObject(0)
-                    .getJSONObject("message")
-                    .getString("content")
-                    .trim()
-            } else {
-                // Read error response for debugging
-                val errorResponse = try {
-                    connection.errorStream?.bufferedReader()?.use { it.readText() } ?: "No error details"
-                } catch (e: Exception) {
-                    "Could not read error response"
+    suspend fun getAiSuggestion(diaryContent: String, customPrompt: String? = null): String =
+        withContext(Dispatchers.IO) {
+            return@withContext try {
+                Log.d("AiService", "Starting AI request...")
+
+                val systemMessage = if (customPrompt.isNullOrBlank()) {
+                    "사용자가 작성한 일기를 바탕으로 일기내용에 공감하거나, 조언하거나, 위로해주세요. 한국어로 답변하고 최대 200자 이내로 친근하고 다정한 말투로 작성해주세요."
+                } else {
+                    "사용자의 일기를 바탕으로 질문에 답변해주세요. 영어로 따뜻하고 친근한 말투로 답변해주세요."
                 }
-                Log.e("AiService", "API Error Response: $errorResponse")
-                throw Exception("API call failed with response code: $responseCode. Error: $errorResponse")
+
+                val userContent = if (customPrompt.isNullOrBlank()) {
+                    "일기 내용: $diaryContent"
+                } else {
+                    "일기 내용: $diaryContent\n\n질문: $customPrompt"
+                }
+
+                val messages = listOf(
+                    Message("system", systemMessage),
+                    Message("user", userContent)
+                )
+
+                val request = CompletionRequest(
+                    model = "solar-1-mini-chat",
+                    messages = messages,
+                    max_tokens = 200,
+                    temperature = 0.7
+                )
+
+                Log.d("AiService", "Sending request to API...")
+                val response = apiService.generateCompletion("Bearer $apiKey", request)
+
+                Log.d("AiService", "Response code: ${response.code()}")
+
+                if (response.isSuccessful) {
+                    val result = response.body()?.choices?.firstOrNull()?.message?.content?.trim()
+                        ?: "죄송합니다. 잠시 후 다시 시도해주세요."
+                    Log.d("AiService", "Success: $result")
+                    result
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("AiService", "API Error: ${response.code()} - $errorBody")
+                    "AI 서비스에 일시적인 문제가 있습니다. (${response.code()})"
+                }
+            } catch (e: Exception) {
+                Log.e("AiService", "Exception occurred", e)
+                "네트워크 오류가 발생했습니다: ${e.message}"
             }
-        } catch (e: Exception) {
-            throw Exception("Network error: ${e.message}")
-        } finally {
-            connection.disconnect()
         }
-    }
 }
+
+// API 인터페이스와 데이터 클래스들
+interface UpstageApiService {
+    @POST("v1/solar/chat/completions")
+    @Headers("Content-Type: application/json")
+    suspend fun generateCompletion(
+        @Header("Authorization") authorization: String,
+        @Body request: CompletionRequest
+    ): Response<CompletionResponse>
+}
+
+data class CompletionRequest(
+    val model: String,
+    val messages: List<Message>,
+    val max_tokens: Int,
+    val temperature: Double
+)
+
+data class Message(
+    val role: String,
+    val content: String
+)
+
+data class CompletionResponse(
+    val choices: List<Choice>
+)
+
+data class Choice(
+    val message: Message
+)

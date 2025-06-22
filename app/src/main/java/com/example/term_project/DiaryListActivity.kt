@@ -90,10 +90,9 @@ class DiaryListActivity : AppCompatActivity(), DiaryAdapter.OnDiaryClickListener
             }
         }
         
-        private suspend fun getDiaryEntriesForMonth(year: Int, month: Int): List<DiaryEntry> = suspendCoroutine { continuation ->
-            val currentUserId = auth.currentUser?.uid
+        private suspend fun getDiaryEntriesForMonth(year: Int, month: Int):
+                List<DiaryEntry> = suspendCoroutine { continuation -> val currentUserId = auth.currentUser?.uid
 
-            // Create month string in format "YYYY-MM"
             val monthString = String.format("%04d-%02d", year, month)
 
             db.collection("NOTE")

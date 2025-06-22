@@ -361,7 +361,7 @@ class DiaryDetailActivity : AppCompatActivity() {
                 askAiButton.text = "Extending..."
                 aiResponseTextView.text = "AI is extending your diary..."
                 
-                val extension = aiService.extendDiary(body)
+                val extension = aiService.getAiSuggestion(body)
                 currentAiExtension = extension
                 aiResponseTextView.text = extension
                 
