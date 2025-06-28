@@ -31,48 +31,6 @@ A simple and intuitive digital diary application that encourages daily reflectio
 - Database: [Add your database choice]
 - Version Control: Git
 
-## Installation
-
-### Setting up Screenshots
-Create a `screenshots` folder in your project root and add your images:
-```
-gyuun-Fiveminiutediary/
-├── screenshots/
-│   ├── fv1.jpg
-│   ├── fv2.jpg
-│   └── [additional screenshots as needed]
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── styles/
-│   └── utils/
-├── public/
-├── docs/
-└── README.md
-```
-
-1. Clone the repository:
-```bash
-git clone https://github.com/username/gyuun-Fiveminiutediary.git
-```
-
-2. Navigate to the project directory:
-```bash
-cd gyuun-Fiveminiutediary
-```
-
-3. Install dependencies:
-```bash
-# Add installation commands based on your technology stack
-npm install
-```
-
-4. Start the development server:
-```bash
-# Add start command
-npm start
-```
-
 ## Usage
 
 1. **Create an Account**: Sign up to start your journaling journey
